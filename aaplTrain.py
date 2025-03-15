@@ -54,9 +54,10 @@ model = Sequential([
     Dense(50, activation='relu'),
     Dense(1)
 ])
+LearningRate = .001
 
 # Compile the model
-model.compile(optimizer=Adam(learning_rate=0.001), loss='mean_squared_error')
+model.compile(optimizer=Adam(learning_rate=LearningRate), loss='mean_squared_error')
 
 # Train the model
 history = model.fit(
@@ -69,7 +70,7 @@ history = model.fit(
 
 # Plot training and validation loss over epochs
 import matplotlib.pyplot as plt
-plt.title(f'Training and Validation Loss (Trained for {num_epochs} Epochs)')
+plt.title(f'Training and Validation Loss (Trained for {num_epochs} Epochs with learning Rate {LearningRate})')
 plt.plot(history.history['loss'], label='Training Loss')
 plt.plot(history.history['val_loss'], label='Validation Loss')
 plt.legend()
