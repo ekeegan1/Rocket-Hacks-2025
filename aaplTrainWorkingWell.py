@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+Created on Sat Mar 15 15:13:18 2025
+
+@author: logan
+"""
+
+# -*- coding: utf-8 -*-
+"""
 Created on Sat Mar 15 10:54:11 2025
 
 @author: logan
@@ -12,7 +19,6 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 import matplotlib.dates as mdates
-from tensorflow.keras.optimizers import Adam
 
 # Load the datase
 file_path = 'aapl.csv'
@@ -41,36 +47,33 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_
 
 
 
-num_epochs = 5  # Replace 50 with the variable storing your epoch count
+num_epochs = 10  # Replace 50 with the variable storing your epoch count
 
 # Build the LSTM model
-model = Sequential([
-    LSTM(100, return_sequences=True, input_shape=(X_train.shape[1], X_train.shape[2])),
-    Dropout(0.2),
-    LSTM(100, return_sequences=True),
-    Dropout(0.2),
-    LSTM(100),
-    Dropout(0.2),
-    Dense(50, activation='relu'),
-    Dense(1)
-])
-LearningRate = .001
+model = Sequential()
+
+# First LSTM layer with dropout
+model.add(LSTM(units=50, return_sequences=True, input_shape=(X_train.shape[1], X_train.shape[2])))
+model.add(Dropout(0.2))
+
+# Second LSTM layer with dropout
+model.add(LSTM(units=50, return_sequences=False))
+model.add(Dropout(0.2))
+
+# Dense output layer
+model.add(Dense(units=1))
 
 # Compile the model
-model.compile(optimizer=Adam(learning_rate=LearningRate), loss='mean_squared_error')
+model.compile(optimizer='adam', loss='mean_squared_error')
+
+
 
 # Train the model
-history = model.fit(
-    X_train, y_train,
-    epochs=num_epochs,
-    batch_size=32,
-    validation_split=0.1,
-    verbose=1
-)
+history = model.fit(X_train, y_train, epochs=num_epochs, batch_size=32, validation_split=0.1)
 
 # Plot training and validation loss over epochs
 import matplotlib.pyplot as plt
-plt.title(f'Training and Validation Loss (Trained for {num_epochs} Epochs with learning Rate {LearningRate})')
+plt.title(f'Training and Validation Loss (Trained for {num_epochs} Epochs)')
 plt.plot(history.history['loss'], label='Training Loss')
 plt.plot(history.history['val_loss'], label='Validation Loss')
 plt.legend()
@@ -119,5 +122,10 @@ plt.legend()
 # Show the plot
 plt.show()
 
+print(len(actual_prices))
+print(len(actual_prices))
+print(len(test_dates))
+print(data.index[-len(y_test):])  # Verify the corresponding dates for y_test
+print(y_test[:5])  # First 5 values of y_test
 
 
